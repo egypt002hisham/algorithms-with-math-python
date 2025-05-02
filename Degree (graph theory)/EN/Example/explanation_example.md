@@ -1,29 +1,37 @@
-# 📚 شرح خوارزمية الضرب البسيط باستخدام نظرية الرسم البياني (Graph Theory)
+# 📚 Simple Multiplication Algorithm Using Graph Theory
 
-## 🧮 **الكود مع التعليقات التفصيلية**
+## 🧠 Concept
+
+This algorithm performs multiplication using only addition and a loop, based on **graph theory representation**.  
+It treats values as **nodes**, and operations as **edges** between them.
+
+---
+
+## 🧮 Code with Graph Theory Comments
 
 ```python
 def start(a, b):
-    # العُقدة z: تمثل ناتج الضرب، قيمتها الأولية 0 (عُقدة مُستقبلة)
+    # Node z: represents the product of multiplication, initially 0 (receiving node)
     z = 0
 
-    # الحلقة: تُكرر طالما درجة العُقدة a > 0 (عدد التكرارات = قيمة a الأولية)
+    # Loop continues as long as the degree of node a > 0 (number of repetitions = initial a)
     while a > 0:
-        # 1️⃣ إضافة قيمة b إلى z: حافة من a إلى z عبر العُقدة الثابتة b
+        # 1️⃣ Add value b to z: an edge from node a to z via fixed value b
         z = z + b  # z += b
 
-        # 2️⃣ تقليل درجة العُقدة a بمقدار 1: حافة حلقة على العُقدة a
-        a = a - 1  # درجة a = عدد التكرارات المتبقية
+        # 2️⃣ Decrease the degree of node a by 1: simulating a self-loop being removed
+        a = a - 1  # degree of a = remaining repetitions
 
-    return z  # إرجاع القيمة النهائية لـ z
+    return z  # Return final value of node z
 
-# مثال: حساب 2 × 2
 r = start(2, 2)
 print(r)  # Output: 4
 
-
-[a: degree=القيمة_الأولى] ───► [b: value=القيمة_الثانية] ───► [z: value=الناتج]
+[a: degree=2] ───► [b: value=2] ───► [z: value=0]
   │
-  ▼ (حلقة تُنقص درجة a بمقدار 1 كل تكرار)
-[a: degree=0]
+  ▼  (loop subtracts 1 from a's degree every iteration)
+[a: degree=1] ───► [b: value=2] ───► [z: value=2]
+  │
+  ▼
+[a: degree=0] ───► [b: value=2] ───► [z: value=4]
 ```
