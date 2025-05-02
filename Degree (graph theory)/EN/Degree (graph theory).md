@@ -26,4 +26,4 @@ Try drawing graphs with paper or code, then:
 
 This builds strong intuition for how algorithms interact with graph structure.
 
-![Degree](image/Degree%20in%20Graph%20Theory.png)
+![Degree](image/Degree_in_Graph_Theory.png)
