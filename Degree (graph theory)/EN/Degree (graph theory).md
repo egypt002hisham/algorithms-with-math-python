@@ -25,3 +25,5 @@ Try drawing graphs with paper or code, then:
 - Check for loops or isolated nodes.
 
 This builds strong intuition for how algorithms interact with graph structure.
+
+![Degree](image/Degree%20in%20Graph%20Theory.png)
