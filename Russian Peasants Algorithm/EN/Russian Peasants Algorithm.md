@@ -1,80 +1,94 @@
 # Russian Peasants Algorithm Explanation
 
-## Overview
+## The Algorithm in Simple Terms
 
-The **Russian Peasants Algorithm** is a method to compute the product of two numbers using halving and doubling operations, combined with binary arithmetic. It maintains an invariant relationship throughout its execution to ensure correctness.
-
----
-
-## Algorithm Explanation and Proof of Correctness
-
-### Key Steps and Invariant
-
-1. **Initial State**:
-   - Start with `x = a`, `y = b`, and `z = 0`.
-   - **Invariant**: The product \( a \times b \) is preserved as \( x \times y + z \).  
-     Initially: \( a \times b = a \times b + 0 \), so the invariant holds.
-
-2. **Loop Execution**:
-   - The loop runs while `x > 0`. In each iteration:
-     - If `x` is odd, adjust `z` to maintain the invariant.
-     - Halve `x` and double `y` using bitwise operations.
-
-3. **Case 1: `x` is Odd**:
-   - **Action**: Add `y` to `z` (`z += y`).  
-     This compensates for the remainder when halving an odd `x`.
-   - **Update `x` and `y`**:
-     - `x` is implicitly decremented by 1 (via `x >> 1` for odd numbers) and halved.
-     - `y` is doubled (`y << 1`).
-
-4. **Case 2: `x` is Even**:
-   - **Action**: No change to `z`.
-   - **Update `x` and `y`**:
-     - `x` is halved directly (`x >> 1`).
-     - `y` is doubled (`y << 1`).
-
-5. **Maintaining the Invariant**:
-   - **Odd Case**:  
-     After updating:  
-     \( x_{\text{new}} = \frac{x - 1}{2} \), \( y_{\text{new}} = 2y \), \( z_{\text{new}} = z + y \).  
-     Substituting into the invariant:  
-     \[
-     \left(\frac{x - 1}{2}\right) \times 2y + (z + y) = (x - 1)y + z + y = xy + z = a \times b
-     \]
-   - **Even Case**:  
-     After updating:  
-     \( x_{\text{new}} = \frac{x}{2} \), \( y_{\text{new}} = 2y \), \( z_{\text{new}} = z \).  
-     Substituting into the invariant:  
-     \[
-     \left(\frac{x}{2}\right) \times 2y + z = xy + z = a \times b
-     \]
-
-6. **Termination**:
-   - When `x` becomes 0, the invariant simplifies to \( 0 \times y + z = a \times b \).  
-   - Thus, `z` contains the final product \( a \times b \).
+- A smart way to multiply two numbers **without directly using multiplication**, by:
+  1. **Continuously halving the first number (x)** (until it becomes zero).
+  2. **Doubling the second number (y)** in each step.
+  3. **Adding values of (y)** in specific cases to get the final result.
 
 ---
 
-## Code Explanation
+## How the Algorithm Works Step by Step
 
-### Russian_Peasants_Algorithm(a, b)
+### Variables Used:
 
-This function computes the product of `a` and `b` using the invariant \( a \times b = x \times y + z \).
+- `x`: The first number (which is halved in each step).
+- `y`: The second number (which is doubled in each step).
+- `z`: The place where the final result is stored.
+
+### Execution Steps:
+
+1. **Start with**:
+
+   - `x = first number` (e.g., 5)
+   - `y = second number` (e.g., 4)
+   - `z = 0`
+
+2. **Repeat the following until `x = 0`**:
+
+   - **If `x` is odd**:
+     - Add the value of `y` to `z`.
+     - Decrease `x` by 1 (to make it even).
+   - **Divide `x` by 2** and **double `y`**.
+
+3. **When `x = 0`**, `z` will hold the multiplication result.
+
+---
+
+## Practical Example (5 × 4):
+
+| Step | x   | y   | z   | Explanation                    |
+| ---- | --- | --- | --- | ------------------------------ |
+| 1    | 5   | 4   | 0   | `x` is odd → Add 4 to `z`      |
+| 2    | 2   | 8   | 4   | `x` is even → No change in `z` |
+| 3    | 1   | 16  | 4   | `x` is odd → Add 16 to `z`     |
+| 4    | 0   | 32  | 20  | Stop → Final result `z = 20`   |
+
+**Note**:
+
+- In the first step: Since `x = 5` (odd), we added `y = 4` to `z`.
+- In the last step: When `x = 0`, the loop stops, and `z = 20` (which is 5 × 4).
+
+---
+
+## Why Does This Algorithm Work? 🧐
+
+- **The Core Idea**:
+
+  - Every time we **halve `x`** (÷2) and **double `y`** (×2), the product `x * y` remains the same.  
+    Example:  
+    `x = 4`, `y = 4` → `4*4 = 16`  
+    After halving/doubling: `x = 2`, `y = 8` → `2*8 = 16`
+
+- **Odd `x` Case**:
+  - When halving an odd number, we subtract 1 first to make it even.  
+    Example: `5 ÷ 2 = 2.5`, but in the algorithm:  
+    `(5 - 1) ÷ 2 = 2` (we ignore the decimal).
+    - The remainder (1) represents the value of `y` added to `z`.
+
+---
+
+## Python Code
 
 ```python
-def Russian_Peasants_Algorithm(a, b):
-    x = a  # Initialize x with the first number (a)
-    y = b  # Initialize y with the second number (b)
-    z = 0  # Initialize z to accumulate the result
+def multiply(a, b):
+    x = a  # First number (to be halved)
+    y = b  # Second number (to be doubled)
+    z = 0  # Final result
 
-    while x > 0:  # Loop until x is reduced to 0
-        if x % 2 == 1:  # If x is odd, add y to z to maintain the invariant
-            z = y + z
+    while x > 0:
+        if x % 2 == 1:    # If x is odd
+            z += y        # Add y to z
 
-        y = y << 1  # Double y (left shift by 1 bit)
-        x = x >> 1  # Halve x (right shift by 1 bit)
+        x = x // 2        # Halve x (ignore decimals)
+        y = y * 2         # Double y
 
-    return z  # Return the computed product```
+    return z              # Final result
+
+print(multiply(5, 4))     # 20
+
+```
 
 # Explanation of the `binary` Function
 
@@ -87,4 +101,25 @@ def binary(n, m):
     n = n >> 1  # Divide n by 2 (right shift)
     m = m << 1  # Multiply m by 2 (left shift)
     return n, m  # Return the updated values
+```
+
+# Multiply and Divide use binary
+
+```python
+def multiply(a, b):
+    x = a  # First number (to be halved)
+    y = b  # Second number (to be doubled)
+    z = 0  # Final result
+
+    while x > 0:
+        if x % 2 == 1:    # If x is odd
+            z += y        # Add y to z
+
+        x = x << 1       # Halve x using binary shift (left shift)
+        y = y >> 1       # Double y using binary shift (right shift)
+
+    return z              # Final result
+
+print(multiply(5, 4))     # 20
+
 ```
