@@ -1,4 +1,4 @@
-def start(a, b):
+def Naive(a, b):
     # Calculate the result of a × b using repeated addition through a while loop
     
     # ╔═══════════════╦════════════════════════════════════╗
@@ -40,5 +40,5 @@ def start(a, b):
 
 # Example: Calculate 3 × 2
 # z changes like this: 0 → 2 → 4 → 6
-result = start(3, 2)
+result = Naive(3, 2)
 print(result)  # Output: 6
